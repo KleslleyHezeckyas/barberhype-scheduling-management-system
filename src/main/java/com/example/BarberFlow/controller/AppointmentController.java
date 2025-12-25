@@ -1,7 +1,6 @@
 package com.example.BarberFlow.controller;
 
 import com.example.BarberFlow.domain.Appointment;
-import com.example.BarberFlow.dto.AppointmentRequest;
 import com.example.BarberFlow.service.AppointmentService;
 import com.example.BarberFlow.repository.AppointmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
@@ -21,8 +21,8 @@ public class AppointmentController {
     private AppointmentRepository repository;
 
     @PostMapping
-    public Appointment create(@RequestBody AppointmentRequest request) {
-        return service.createAppointment(request);
+    public Appointment create(@RequestBody Appointment appointment) {
+        return repository.save(appointment);
     }
 
     @GetMapping
@@ -34,19 +34,6 @@ public class AppointmentController {
     public Double getRevenue() {
         Double total = repository.getTotalRevenue();
         return total != null ? total : 0.0;
-    }
-
-    @PutMapping("/{id}")
-    public Appointment update(@PathVariable Long id, @RequestBody AppointmentRequest request ) {
-        return service.updateAppointment(id, request);
-    }
-
-    @PatchMapping("/{id}/complete")
-    public Appointment complete(@PathVariable Long id) {
-        Appointment appointment = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
-        appointment.setCompleted(true);
-        return repository.save(appointment);
     }
 
     @DeleteMapping("/{id}")

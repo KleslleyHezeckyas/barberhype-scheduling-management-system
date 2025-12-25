@@ -5,323 +5,283 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BarberHype - Premium Style</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 15px;
-            background: #0a0a0a;
-            color: #ffffff;
+        :root {
+            --primary: #8a2be2;
+            --primary-hover: #9d4edd;
+            --bg: #0a0a0a;
+            --card-bg: #111111;
+            --text: #ffffff;
+            --text-dim: #b3b3b3;
         }
-        .card {
-            background: #1a1a1a;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.2);
-            border-left: 5px solid #8a2be2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
             margin-bottom: 20px;
         }
-        .card-revenue {
-            border-left: 5px solid #ffffff;
+
+        h1 {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
             text-align: center;
-            display: none;
+            margin-bottom: 25px;
+            cursor: pointer;
         }
-        h2, h3 { color: #8a2be2; margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
-        h2 { cursor: pointer; user-select: none; font-size: 1.8rem; }
-        .revenue-value { color: #ffffff; font-size: 24px; font-weight: bold; margin: 10px 0; }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
 
         input, select {
             width: 100%;
-            padding: 14px;
-            margin: 8px 0;
+            padding: 12px;
+            background: #1a1a1a;
             border: 1px solid #333;
-            border-radius: 8px;
-            box-sizing: border-box;
-            background: #252525;
+            border-radius: 10px;
             color: white;
             outline: none;
-            font-size: 16px;
+            transition: 0.3s;
         }
 
-        .btn-confirm {
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        button {
             width: 100%;
-            padding: 16px;
-            margin: 10px 0;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
             border: none;
             border-radius: 50px;
-            background: #8a2be2;
-            color: white;
             font-weight: bold;
-            font-size: 16px;
+            text-transform: uppercase;
             cursor: pointer;
             position: relative;
-            transition: all 0.4s ease;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-transform: uppercase;
             overflow: hidden;
-        }
-
-        .btn-confirm::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0);
-            border-radius: 50px;
-            transition: background 0.3s ease;
-        }
-
-        .btn-confirm:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.25), 0 0 40px rgba(138, 43, 226, 0.4);
-        }
-
-        .btn-confirm:hover::after {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .search-input {
-            border-color: #444;
-            background: #121212;
-            margin-bottom: 10px;
-        }
-
-        .appointment-item {
-            background: #1e1e1e;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            border-bottom: 1px solid #333;
             transition: 0.3s;
         }
 
-        @media (min-width: 480px) {
-            .appointment-item {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
         }
 
-        .completed {
-            opacity: 0.4;
-            border-left: 5px solid #ffffff;
-        }
-
-        .appointment-info strong { color: #8a2be2; font-size: 1.1rem; }
-        .appointment-info span { display: block; color: #eee; font-size: 0.9rem; }
-        .appointment-info small { color: #bbb; display: block; margin-top: 4px; }
-
-        .actions { display: none; gap: 8px; flex-wrap: wrap; }
-
-        .btn-delete, .btn-edit, .btn-done {
-            padding: 10px 18px;
-            font-size: 13px;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: 0.3s;
-            font-weight: bold;
-            flex: 1;
-            text-align: center;
-            border: none;
-        }
-
-        .btn-delete { background: #000; color: #fff; border: 1px solid #444; }
-        .btn-delete:hover { background: #ff4444; border-color: #ff4444; }
-
-        .btn-edit { background: #fff; color: #000; }
-        .btn-edit:hover { background: #ccc; }
-
-        .btn-done { background: #8a2be2; color: white; }
-        .btn-done:hover { background: #a04ef6; }
-
-        #cancelEdit {
+        .appointment-list {
             width: 100%;
-            padding: 12px;
-            background: #333;
-            border: none;
+            max-width: 450px;
+        }
+
+        .appointment-card {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .revenue-badge {
+            display: none;
+            background: var(--primary);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            padding: 5px 10px;
+            background: #ff4444;
             color: white;
-            border-radius: 50px;
-            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 onclick="toggleAdmin()">BarberHype</h2>
-    <h3 id="formTitle">Reservar Horário</h3>
+<div class="container">
+    <h1 onclick="checkAdmin()">BARBERHYPE</h1>
 
-    <input type="hidden" id="appointmentId">
-    <input type="text" id="clientName" placeholder="Nome do Cliente">
+    <div id="revenue" class="revenue-badge">TOTAL: R$ 0.00</div>
 
-    <select id="serviceSelect">
-        <option value="">Selecione o Serviço...</option>
-    </select>
-
-    <input type="datetime-local" id="dateTime">
-
-    <button class="btn-confirm" id="mainButton" onclick="handleFormSubmit()">Confirmar Agendamento</button>
-    <button id="cancelEdit" style="display:none;" onclick="resetForm()">Cancelar Edição</button>
+    <h2>Book Appointment</h2>
+    <div class="form-group">
+        <input type="text" id="clientName" placeholder="Client Name">
+    </div>
+    <div class="form-group">
+        <select id="serviceSelect">
+            <option value="">Select Service...</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <input type="datetime-local" id="appointmentDate">
+    </div>
+    <button onclick="saveAppointment()">Confirm Appointment</button>
 </div>
 
-<div class="card card-revenue" id="adminRevenue">
-    <h3>Faturamento Total Estimado</h3>
-    <div class="revenue-value" id="totalRevenue">R$ 0,00</div>
-</div>
-
-<div class="card">
-    <h3>Próximos Clientes</h3>
-    <input type="text" id="searchInput" class="search-input" placeholder="Buscar cliente..." onkeyup="filterAppointments()">
-    <div id="appointmentList"></div>
+<div class="appointment-list">
+    <h2>Next Clients</h2>
+    <div class="form-group">
+        <input type="text" id="searchClient" placeholder="Search client..." onkeyup="filterClients()">
+    </div>
+    <div id="listContainer"></div>
 </div>
 
 <script>
-    const API_URL = "localhost:8081";
+    const API_URL = "http://localhost:8081";
     let isAdmin = false;
-    let allAppointments = [];
 
-    function toggleAdmin() {
-        const pass = prompt("Digite a senha de administrador:");
-        if (pass === "Hezeckyas") {
-            isAdmin = true;
-            document.getElementById('adminRevenue').style.display = 'block';
-            loadAppointments();
-            alert("Painel Admin Liberado!");
-        } else {
-            alert("Acesso negado!");
+    async function loadServices() {
+        try {
+            const response = await fetch(`${API_URL}/services`);
+            const services = await response.json();
+            const select = document.getElementById('serviceSelect');
+
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.text = `${service.name} - R$ ${service.price.toFixed(2)}`;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error("Error loading services:", error);
         }
     }
 
-    function setMinDate() {
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        document.getElementById('dateTime').min = now.toISOString().slice(0, 16);
-    }
-
-    async function loadServices() {
-        const response = await fetch(`${API_URL}/services`);
-        const services = await response.json();
-        const select = document.getElementById('serviceSelect');
-        services.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s.id;
-            opt.textContent = `${s.name} - R$ ${s.price.toFixed(2)}`;
-            select.appendChild(opt);
-        });
-    }
-
-    async function loadRevenue() {
-        const response = await fetch(`${API_URL}/appointments/revenue`);
-        const total = await response.json();
-        document.getElementById('totalRevenue').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
-    }
-
     async function loadAppointments() {
-        const response = await fetch(`${API_URL}/appointments`);
-        allAppointments = await response.json();
-        allAppointments.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
-        renderList(allAppointments);
-        if (isAdmin) loadRevenue();
+        try {
+            const response = await fetch(`${API_URL}/appointments`);
+            const appointments = await response.json();
+            renderAppointments(appointments);
+            if (isAdmin) calculateRevenue(appointments);
+        } catch (error) {
+            console.error("Error loading appointments:", error);
+        }
     }
 
-    function renderList(list) {
-        const container = document.getElementById('appointmentList');
+    function renderAppointments(data) {
+        const container = document.getElementById('listContainer');
         container.innerHTML = '';
-        list.forEach(a => {
-            const dateFormatted = new Date(a.dateTime).toLocaleString('pt-BR');
-            const statusClass = a.completed ? 'completed' : '';
-            const actionStyle = isAdmin ? 'display: flex;' : 'display: none;';
-            container.innerHTML += `
-                <div class="appointment-item ${statusClass}">
-                    <div class="appointment-info">
-                        <strong>${a.clientName} ${a.completed ? '✅' : ''}</strong>
-                        <span>${a.service.name}</span>
-                        <small>${dateFormatted}</small>
-                    </div>
-                    <div class="actions" style="${actionStyle}">
-                        ${!a.completed ? `<button class="btn-done" onclick="completeAppointment(${a.id})">Done</button>` : ''}
-                        <button class="btn-edit" onclick="prepareEdit(${JSON.stringify(a).replace(/"/g, '&quot;')})">Edit</button>
-                        <button class="btn-delete" onclick="deleteAppointment(${a.id})">X</button>
-                    </div>
+
+        data.forEach(app => {
+            const card = document.createElement('div');
+            card.className = 'appointment-card';
+            card.innerHTML = `
+                <div>
+                    <strong>${app.clientName}</strong><br>
+                    <small>${app.service ? app.service.name : 'N/A'} - ${new Date(app.dateTime).toLocaleString()}</small>
+                </div>
+                <div style="display: ${isAdmin ? 'block' : 'none'}">
+                    <button class="delete-btn" onclick="deleteAppointment(${app.id})">Cancel</button>
                 </div>
             `;
+            container.appendChild(card);
         });
     }
 
-    function filterAppointments() {
-        const term = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allAppointments.filter(a => a.clientName.toLowerCase().includes(term));
-        renderList(filtered);
-    }
+    async function saveAppointment() {
+        const name = document.getElementById('clientName').value;
+        const serviceId = document.getElementById('serviceSelect').value;
+        const date = document.getElementById('appointmentDate').value;
 
-    async function completeAppointment(id) {
-        const response = await fetch(`${API_URL}/appointments/${id}/complete`, { method: 'PATCH' });
-        if (response.ok) loadAppointments();
-    }
+        if (!name || !serviceId || !date) return alert("Fill all fields");
 
-    function prepareEdit(appointment) {
-        document.getElementById('appointmentId').value = appointment.id;
-        document.getElementById('clientName').value = appointment.clientName;
-        document.getElementById('serviceSelect').value = appointment.service.id;
-        document.getElementById('dateTime').value = appointment.dateTime.substring(0, 16);
-        document.getElementById('formTitle').textContent = "Editar Horário";
-        document.getElementById('mainButton').textContent = "Salvar";
-        document.getElementById('cancelEdit').style.display = "block";
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function resetForm() {
-        document.getElementById('appointmentId').value = '';
-        document.getElementById('clientName').value = '';
-        document.getElementById('serviceSelect').value = '';
-        document.getElementById('dateTime').value = '';
-        document.getElementById('formTitle').textContent = "Reservar Horário";
-        document.getElementById('mainButton').textContent = "Confirmar Agendamento";
-        document.getElementById('cancelEdit').style.display = "none";
-        setMinDate();
-    }
-
-    async function handleFormSubmit() {
-        const id = document.getElementById('appointmentId').value;
-        const data = {
-            clientName: document.getElementById('clientName').value,
-            serviceId: document.getElementById('serviceSelect').value,
-            dateTime: document.getElementById('dateTime').value
+        const payload = {
+            clientName: name,
+            service: { id: parseInt(serviceId) },
+            dateTime: date
         };
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `${API_URL}/appointments/${id}` : `${API_URL}/appointments`;
-        const response = await fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        if (response.ok) {
-            resetForm();
-            loadAppointments();
+
+        try {
+            const res = await fetch(`${API_URL}/appointments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                location.reload();
+            } else {
+                alert("Error saving appointment. Check Java console.");
+            }
+        } catch (error) {
+            alert("Connection failed");
         }
     }
 
     async function deleteAppointment(id) {
-        if (confirm("Cancelar?")) {
+        if (confirm("Delete this appointment?")) {
             await fetch(`${API_URL}/appointments/${id}`, { method: 'DELETE' });
-            loadAppointments();
+            location.reload();
         }
     }
 
-    setMinDate();
-    loadServices();
-    loadAppointments();
-</script>
+    function checkAdmin() {
+        const pass = prompt("Admin Password:");
+        if (pass === "1234") {
+            isAdmin = true;
+            document.getElementById('revenue').style.display = 'block';
+            loadAppointments();
+            alert("Admin Access Granted");
+        } else {
+            alert("Wrong password");
+        }
+    }
 
+    function calculateRevenue(data) {
+        const total = data.reduce((acc, curr) => acc + (curr.service ? curr.service.price : 0), 0);
+        document.getElementById('revenue').innerText = `TOTAL: R$ ${total.toFixed(2)}`;
+    }
+
+    function filterClients() {
+        const term = document.getElementById('searchClient').value.toLowerCase();
+        const cards = document.querySelectorAll('.appointment-card');
+        cards.forEach(card => {
+            const name = card.querySelector('strong').innerText.toLowerCase();
+            card.style.display = name.includes(term) ? 'flex' : 'none';
+        });
+    }
+
+    window.onload = () => {
+        loadServices();
+        loadAppointments();
+    };
+</script>
 </body>
 </html>
